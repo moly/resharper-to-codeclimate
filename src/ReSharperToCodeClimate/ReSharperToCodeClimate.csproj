@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.0.1</Version>
+    <RootNamespace>ReSharperToCodeClimate</RootNamespace>
+    <AssemblyName>resharper-to-codeclimate</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <PackageId>resharper-to-codeclimate</PackageId>
+    <Authors>Thomas Weston</Authors>
+    <PackageDescription>Converts a ReSharper inspectcode xml report file to a Code Climate json report file.</PackageDescription>
+    <PackageProjectUrl>https://github.com/moly/resharper-to-codeclimate</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/moly/resharper-to-codeclimate</RepositoryUrl>
+    <PackageTags>resharper codeclimate gitlab</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <ToolCommandName>resharper-to-codeclimate</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>
