@@ -12,9 +12,12 @@ dotnet tool install -g dotnet-resharper-to-codeclimate
 dotnet resharper-to-codeclimate results.xml results.json
 ```
 
-## .gitlab-ci.yml
+## example .gitlab-ci.yml
 
 ```yaml
+variables:
+  NUGET_PACKAGES: '$CI_PROJECT_DIR\.nuget\packages'
+
 codequality:
   stage: codequality
   script:
@@ -25,6 +28,8 @@ codequality:
     key:
       files: 
         - .config/dotnet-tools.json
+    paths:
+      - .nuget/
   artifacts:
     when: always
     reports:
