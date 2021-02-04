@@ -1,0 +1,28 @@
+name: Nuget
+
+on:
+  workflow_run:
+    workflows: [".NET"]
+    branches: [ master ]
+    types:
+      - completed
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Pack
+      run: dotnet pack --no-restore -c Release --output package
+    - name: Push
+      env:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      run: dotnet nuget push ./package/*.nupkg --api-key "$NUGET_KEY" --skip-duplicate
