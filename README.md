@@ -16,13 +16,15 @@ dotnet resharper-to-codeclimate results.xml results.json
 
 ```yaml
 variables:
-  NUGET_PACKAGES: '$CI_PROJECT_DIR\.nuget\packages'
+  DOTNET_PACKAGES: '$CI_PROJECT_DIR\.nuget\packages'
+  DOTNET_CLI_HOME: '$CI_PROJECT_DIR\.dotnet'
+  DOTNET_NOLOGO: 'true'
 
 codequality:
   stage: codequality
   script:
     - dotnet tools restore
-    - dotnet jb inspectcode AEExport.sln -o=results.xml
+    - dotnet jb inspectcode Project.sln -o=results.xml
     - dotnet resharper-to-codeclimate results.xml results.json
   cache:
     key:

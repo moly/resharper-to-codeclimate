@@ -4,13 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <RootNamespace>ReSharperToCodeClimate</RootNamespace>
     <AssemblyName>resharper-to-codeclimate</AssemblyName>
     <PackAsTool>true</PackAsTool>
     <PackageId>resharper-to-codeclimate</PackageId>
     <Authors>Thomas Weston</Authors>
     <PackageDescription>Converts a ReSharper inspectcode xml report file to a Code Climate json report file.</PackageDescription>
+    <PackageReleaseNotes>Added severity info</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/moly/resharper-to-codeclimate</PackageProjectUrl>
     <RepositoryUrl>https://github.com/moly/resharper-to-codeclimate</RepositoryUrl>
     <PackageTags>resharper codeclimate gitlab</PackageTags>
