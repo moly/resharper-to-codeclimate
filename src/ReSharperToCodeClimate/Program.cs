@@ -6,18 +6,24 @@ using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
 
-namespace ReSharperToCodeclimate
+namespace ReSharperToCodeClimate
 {
     class Program
     {
         static void Main(string[] args)
         {
+            if(args.Length != 2)
+            {
+                Console.WriteLine("Usage: dotnet resharper-to-codeclimate imput.xml output.json");
+                Environment.Exit(1);
+            }
+
             List<CodeClimateIssue> codeClimateReport = new List<CodeClimateIssue>();
 
-            XElement resharperReport = XElement.Load(args[0]);
-            Dictionary<string, string> severityByIssueType = CreateSeverityByIssueTypeDictionary(resharperReport.Descendants("IssueType"));
+            XElement reSharperReport = XElement.Load(args[0]);
+            Dictionary<string, string> severityByIssueType = CreateSeverityByIssueTypeDictionary(reSharperReport.Descendants("IssueType"));
 
-            foreach (XElement issue in resharperReport.Descendants("Issue"))
+            foreach (XElement issue in reSharperReport.Descendants("Issue"))
             {
                 codeClimateReport.Add(
                     new CodeClimateIssue()
@@ -43,7 +49,7 @@ namespace ReSharperToCodeclimate
 
         private static Dictionary<string, string> CreateSeverityByIssueTypeDictionary(IEnumerable<XElement> issueTypes)
         {
-            Dictionary<string, string> codeClimateSeverityByResharperSeverity = new Dictionary<string, string>()
+            Dictionary<string, string> codeClimateSeverityByReSharperSeverity = new Dictionary<string, string>()
             {
                 {"ERROR", "critical"},
                 {"WARNING", "major"},
@@ -55,7 +61,7 @@ namespace ReSharperToCodeclimate
 
             foreach (var issueType in issueTypes)
             {
-                string severity = codeClimateSeverityByResharperSeverity[issueType.Attribute("Severity").Value];
+                string severity = codeClimateSeverityByReSharperSeverity[issueType.Attribute("Severity").Value];
                 serverityByIssueType.Add(issueType.Attribute("Id").Value, severity);
             }
 
