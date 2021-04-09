@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -68,9 +69,16 @@ namespace ReSharperToCodeClimate
             return serverityByIssueType;
         }
 
+        private static ConcurrentDictionary<string, int> FingerprintCounters = new();
+
         private static string CalculateFingerprint(XElement issue)
         {
-            string input = issue.Attribute("File").Value + "-" + issue.Attribute("Offset").Value + '-' + issue.Attribute("TypeId").Value;
+            var file = issue.Attribute("File").Value;
+            var type = issue.Attribute("TypeId").Value;
+
+            var counter = FingerprintCounters.AddOrUpdate(file + '-' + type, 1, (_, count) => count + 1);
+
+            string input = file + "-" + counter + '-' + type;
 
             using (MD5 md5Hash = MD5.Create())
             {
