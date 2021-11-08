@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <RootNamespace>ReSharperToCodeClimate</RootNamespace>
     <AssemblyName>resharper-to-codeclimate</AssemblyName>
     <PackAsTool>true</PackAsTool>
