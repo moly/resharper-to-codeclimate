@@ -26,11 +26,14 @@ namespace ReSharperToCodeClimate
 
             foreach (XElement issue in reSharperReport.Descendants("Issue"))
             {
-                codeClimateReport.Add(
-                    new CodeClimateIssue()
+                var severity = severityByIssueType[issue.Attribute("TypeId").Value];
+                if (string.IsNullOrEmpty(severity))
+                    continue;
+
+                codeClimateReport.Add(new CodeClimateIssue
                     {
                         Description = issue.Attribute("Message").Value,
-                        Severity = severityByIssueType[issue.Attribute("TypeId").Value],
+                        Severity = severity,
                         Fingerprint = CalculateFingerprint(issue),
                         Location = new IssueLocation()
                         {
@@ -55,18 +58,19 @@ namespace ReSharperToCodeClimate
                 {"ERROR", "critical"},
                 {"WARNING", "major"},
                 {"SUGGESTION", "minor"},
-                {"HINT", "info"}
+                {"HINT", "info"},
+                {"DO_NOT_SHOW", string.Empty}
             };
 
-            Dictionary<string, string> serverityByIssueType = new Dictionary<string, string>();
+            Dictionary<string, string> severityByIssueType = new Dictionary<string, string>();
 
             foreach (var issueType in issueTypes)
             {
                 string severity = codeClimateSeverityByReSharperSeverity[issueType.Attribute("Severity").Value];
-                serverityByIssueType.Add(issueType.Attribute("Id").Value, severity);
+                severityByIssueType.Add(issueType.Attribute("Id").Value, severity);
             }
 
-            return serverityByIssueType;
+            return severityByIssueType;
         }
 
         private static ConcurrentDictionary<string, int> FingerprintCounters = new();
