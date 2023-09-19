@@ -9,7 +9,7 @@ note, currently only converts to the subset of the code climate spec [required f
 
 ```powershell
 dotnet tool install -g resharper-to-codeclimate
-dotnet resharper-to-codeclimate results.xml results.json
+resharper-to-codeclimate results.xml results.json
 ```
 
 ## example .gitlab-ci.yml
@@ -24,8 +24,8 @@ codequality:
   stage: codequality
   script:
     - dotnet tools restore
-    - dotnet jb inspectcode Project.sln -o=results.xml
-    - dotnet resharper-to-codeclimate results.xml results.json
+    - jb inspectcode Project.sln -o=results.xml
+    - resharper-to-codeclimate results.xml results.json
   cache:
     key:
       files: 
