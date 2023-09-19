@@ -10,9 +10,9 @@ using JorgeSerrano.Json;
 
 namespace ReSharperToCodeClimate
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if(args.Length != 2)
             {
@@ -34,7 +34,7 @@ namespace ReSharperToCodeClimate
                 codeClimateReport.Add(new CodeClimateIssue
                     {
                         Description = issue.Attribute("Message").Value,
-                        CheckName = issue.Attribute("Id").Value,
+                        CheckName = issue.Attribute("TypeId")?.Value,
                         Severity = severity,
                         Fingerprint = CalculateFingerprint(issue),
                         Location = new IssueLocation()
