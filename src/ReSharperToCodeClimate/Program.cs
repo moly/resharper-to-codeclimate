@@ -16,7 +16,7 @@ namespace ReSharperToCodeClimate
         {
             if(args.Length != 2)
             {
-                Console.WriteLine("Usage: dotnet resharper-to-codeclimate imput.xml output.json");
+                Console.WriteLine("Usage: dotnet resharper-to-codeclimate input.xml output.json");
                 Environment.Exit(1);
             }
 
