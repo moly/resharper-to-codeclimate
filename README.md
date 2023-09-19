@@ -8,7 +8,7 @@ note, currently only converts to the subset of the code climate spec [required f
 ## usage
 
 ```powershell
-dotnet tool install -g dotnet-resharper-to-codeclimate
+dotnet tool install -g resharper-to-codeclimate
 dotnet resharper-to-codeclimate results.xml results.json
 ```
 

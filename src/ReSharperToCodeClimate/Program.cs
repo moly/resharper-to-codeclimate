@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
+using JorgeSerrano.Json;
 
 namespace ReSharperToCodeClimate
 {
@@ -33,6 +34,7 @@ namespace ReSharperToCodeClimate
                 codeClimateReport.Add(new CodeClimateIssue
                     {
                         Description = issue.Attribute("Message").Value,
+                        CheckName = issue.Attribute("Id").Value,
                         Severity = severity,
                         Fingerprint = CalculateFingerprint(issue),
                         Location = new IssueLocation()
@@ -47,7 +49,7 @@ namespace ReSharperToCodeClimate
                 );
             }
 
-            JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy() };
             File.WriteAllText(args[1], JsonSerializer.Serialize(codeClimateReport, options));
         }
 
@@ -106,6 +108,8 @@ namespace ReSharperToCodeClimate
 
     class CodeClimateIssue
     {
+        public String CheckName { get; set; }
+        
         public string Description { get; set; }
 
         public string Fingerprint { get; set; }
