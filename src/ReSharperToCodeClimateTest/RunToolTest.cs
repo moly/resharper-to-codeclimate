@@ -1,4 +1,5 @@
 
+using System.Text.Json;
 using ReSharperToCodeClimate;
 
 namespace ReSharperToCodeClimateTest;
@@ -6,17 +7,38 @@ namespace ReSharperToCodeClimateTest;
 [TestClass]
 public class RunToolTest
 {
-    [TestMethod]
-    [DeploymentItem(@"test.xml", "optionalOutFolder")]
-    public void CheckIfToolCanConvertTheFile()
+    private const string TestInDir = "test_data/in";
+    private const string TestExpectedOutDir = "test_data/expected_out";
+    private const string TestOutDir = "test_data/out";
+    
+    
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
+        Directory.CreateDirectory(TestOutDir);
+    }
+
+    [TestMethod]
+    [DataRow("test.xml", "test.json", "test.json")]
+    [DataRow("test_issue_different_severity.xml", "test_issue_different_severity.json", "test_issue_different_severity.json")]
+    public void CheckIfToolCanConvertTheFile(string inFilename, string outFilename, string expectedOutFilename)
+    {
+        string inPath = $"{TestInDir}/{inFilename}";
+        string expectedOutPath = $"{TestExpectedOutDir}/{expectedOutFilename}";
+        string outPath = $"{TestOutDir}/{outFilename}";
+
         Program.Main(new []
         {
-            "test.xml",
-            "test.json"
+            inPath,
+            outPath
         });
-        var content = File.ReadAllText("test.json");
-        Assert.AreEqual(
-            "[{\"check_name\":\"RedundantUsingDirective\",\"description\":\"Using directive is not required by the code and can be safely removed\",\"fingerprint\":\"dc7a773952228dfee22347f60fe68adc\",\"severity\":\"major\",\"location\":{\"path\":\"test.xml\",\"lines\":{\"begin\":2}}}]", content);
+
+        using var outDoc = JsonDocument.Parse(File.ReadAllText(outPath));
+        using var expectedOutDoc = JsonDocument.Parse(File.ReadAllText(expectedOutPath));
+
+        var outDocStr = JsonSerializer.Serialize(outDoc);
+        var expectedOutDocStr = JsonSerializer.Serialize(expectedOutDoc);
+
+        Assert.AreEqual(expectedOutDocStr, outDocStr);
     }
 }

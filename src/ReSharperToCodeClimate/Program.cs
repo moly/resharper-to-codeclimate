@@ -27,7 +27,10 @@ namespace ReSharperToCodeClimate
 
             foreach (XElement issue in reSharperReport.Descendants("Issue"))
             {
-                var severity = severityByIssueType[issue.Attribute("TypeId").Value];
+                string issueResharperSeverity = issue.Attribute("Severity")?.Value;
+                string severity = issueResharperSeverity != null
+                    ? CodeClimateSeverityByReSharperSeverity[issueResharperSeverity]
+                    : severityByIssueType[issue.Attribute("TypeId").Value];
                 if (string.IsNullOrEmpty(severity))
                     continue;
 
@@ -55,20 +58,11 @@ namespace ReSharperToCodeClimate
 
         private static Dictionary<string, string> CreateSeverityByIssueTypeDictionary(IEnumerable<XElement> issueTypes)
         {
-            Dictionary<string, string> codeClimateSeverityByReSharperSeverity = new Dictionary<string, string>()
-            {
-                {"ERROR", "critical"},
-                {"WARNING", "major"},
-                {"SUGGESTION", "minor"},
-                {"HINT", "info"},
-                {"DO_NOT_SHOW", string.Empty}
-            };
-
             Dictionary<string, string> severityByIssueType = new Dictionary<string, string>();
 
             foreach (var issueType in issueTypes)
             {
-                string severity = codeClimateSeverityByReSharperSeverity[issueType.Attribute("Severity").Value];
+                string severity = CodeClimateSeverityByReSharperSeverity[issueType.Attribute("Severity").Value];
                 severityByIssueType.Add(issueType.Attribute("Id").Value, severity);
             }
 
@@ -76,6 +70,15 @@ namespace ReSharperToCodeClimate
         }
 
         private static ConcurrentDictionary<string, int> FingerprintCounters = new();
+
+        private static readonly Dictionary<string, string> CodeClimateSeverityByReSharperSeverity = new()
+        {
+            {"ERROR", "critical"},
+            {"WARNING", "major"},
+            {"SUGGESTION", "minor"},
+            {"HINT", "info"},
+            {"DO_NOT_SHOW", string.Empty}
+        };
 
         private static string CalculateFingerprint(XElement issue)
         {
