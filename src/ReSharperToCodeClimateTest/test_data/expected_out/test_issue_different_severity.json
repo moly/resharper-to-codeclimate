@@ -1,0 +1,14 @@
+[
+  {
+    "check_name": "InconsistentNaming",
+    "description": "Name \u0027snake_case\u0027 does not match rule \u0027Local variables\u0027. Suggested name is \u0027snakeCase\u0027.",
+    "fingerprint": "7ca1db7094d83f93e82cc22434101224",
+    "severity": "critical",
+    "location": {
+      "path": "Test/Program.cs",
+      "lines": {
+        "begin": 3
+      }
+    }
+  }
+]
