@@ -18,7 +18,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Pack
-      run: dotnet pack --no-restore -c Release --output package --version ${{ github.event.release.tag_name:1 }} -P:PackageReleaseNotes="${{ github.event.release.body }}"
+      run: dotnet pack --no-restore -c Release --output package --version ${GITHUB_REF_NAME#v} -p:PackageReleaseNotes="${{ github.event.release.body }}"
     - name: NuGet login
       uses: NuGet/login@v1
       id: login
