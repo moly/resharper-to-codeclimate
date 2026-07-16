@@ -1,28 +1,30 @@
-name: Nuget
+name: nuget
 
 on:
-  workflow_run:
-    workflows: [".NET"]
-    branches: [ master ]
-    types:
-      - completed
+  release:
+    types: [ published ]
 
 jobs:
-  build:
-
+  publish:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Pack
-      run: dotnet pack --no-restore -c Release --output package
-    - name: Push
+      run: dotnet pack --no-restore -c Release --output package --version ${GITHUB_REF_NAME#v} -p:PackageReleaseNotes="${{ github.event.release.body }}"
+    - name: NuGet login
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+    - name: NuGet Push
       env:
         NUGET_KEY: ${{ secrets.NUGET_KEY }}
-      run: dotnet nuget push ./package/*.nupkg --source https://api.nuget.org/v3/index.json --api-key "$NUGET_KEY" --skip-duplicate
+      run: dotnet nuget push ./package/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
